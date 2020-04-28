@@ -6,6 +6,8 @@ import (
 	"github.com/P147x/remotelogs-api/internal/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
+	"errors"
 )
 
 var db *gorm.DB
@@ -35,10 +37,13 @@ func InitDatabase() {
 }
 
 //Login is used to verify if the user currently exist in the database using password and username
-func Login(username string, password string) (model.User) {
+func Login(username string, password string) (model.User, error) {
 	var user model.User
-	GetDatabase().Where("username = ? AND password = ?", username, password).First(&user)
-	return user
+	GetDatabase().Where("username = ?", username).First(&user)
+	if user.IsInitialized() && bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) == nil {
+		return user, nil
+	}
+	return user, errors.New("Error occured")
 }
 
 //GetUser is used to get user information from his username

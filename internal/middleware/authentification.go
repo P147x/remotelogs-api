@@ -23,10 +23,8 @@ func JWTMiddleware() *jwt.GinJWTMiddleware {
 				return "", jwt.ErrMissingLoginValues
 			}
 
-			var user model.User
-			user = database.Login(loginVals.Username, loginVals.Password)
-
-			if user.IsInitialized() {
+			user, err := database.Login(loginVals.Username, loginVals.Password)
+			if err == nil {
 				return user, nil
 			}
 			return nil, jwt.ErrFailedAuthentication
