@@ -1,0 +1,31 @@
+# docker-compose
+version: "3.3"
+services:
+  # database
+  remotelogs-db:
+    image: mysql:5.6
+    container_name: remotelogs-db
+    environment:
+        MYSQL_USER: "user"
+        MYSQL_PASSWORD: "password"
+        MYSQL_DATABASE: "remotelogs"
+        MYSQL_ROOT_PASSWORD: "rootpswrd"
+    ports:
+      - "3306:3306"
+  # api
+  remotelogs-api:
+    build:
+        context: ../
+        dockerfile:  ./build/remotelogs-api/Dockerfile
+    container_name: remotelogs-api
+    depends_on:
+      - remotelogs-db
+    links:
+        - "remotelogs-db:database"
+    ports:
+      - "3000:3000"
+    tty: true
+      
+#volumes:
+#    - ./database/sql:/docker-entrypoint-initdb.d
+#    - ./database/my.cnf:/etc/mysql/conf.d/my.cnf
