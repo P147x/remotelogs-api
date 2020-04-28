@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/P147x/remotelogs-api/internal/controller"
 	"github.com/P147x/remotelogs-api/internal/middleware"
@@ -22,6 +23,16 @@ func configureV1(r *gin.Engine) {
 }
 
 func InitRouter(r *gin.Engine) {
-	r.Use(cors.Default())
+	r.Use(cors.New(cors.Config{
+		AllowMethods:  []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
+		AllowHeaders:  []string{"Origin", "Content-Length", "Content-Type", "User-Agent", "Referrer", "Host", "Token", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-*"},
+		ExposeHeaders: []string{"Content-Length"},
+		AllowOrigins:  []string{"http://localhost", "*"},
+		AllowWildcard: true,
+
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	configureV1(r)
 }
