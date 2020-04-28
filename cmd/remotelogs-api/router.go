@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"net/http"
+
 	"github.com/P147x/remotelogs-api/internal/controller"
 	"github.com/P147x/remotelogs-api/internal/middleware"
-	"net/http"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func ping(c *gin.Context) {
@@ -20,5 +22,6 @@ func configureV1(r *gin.Engine) {
 }
 
 func InitRouter(r *gin.Engine) {
+	r.Use(cors.Default())
 	configureV1(r)
 }
