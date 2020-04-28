@@ -13,7 +13,7 @@ func SystemRoutes(r *gin.RouterGroup) {
 	r.GET("/name", osname)
 }
 
-//GET /api/v1/sys/logs
+//GET /api/v1/system/logs
 func logs(c *gin.Context) {
 	var logs []string
 	err := filepath.Walk("/var/log",
@@ -31,7 +31,7 @@ func logs(c *gin.Context) {
 	}
 }
 
-//GET /api/v1/sys/name
+//GET /api/v1/system/name
 func osname(c *gin.Context) {
 	name, err := utils.UtsString()
 	if err == nil {
